@@ -33,6 +33,16 @@
       font: 400 11px Roboto, Arial, sans-serif;
       text-decoration: none;
     }
+
+    input[type=checkbox]
+    {
+      /* Double-sized Checkboxes */
+      -ms-transform: scale(2); /* IE */
+      -moz-transform: scale(2); /* FF */
+      -webkit-transform: scale(2); /* Safari and Chrome */
+      -o-transform: scale(2); /* Opera */
+      padding: 10px;
+    }
   </style>
 
   <!-- Head -->
@@ -162,18 +172,6 @@
 </head>
 
 <body data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0">
-  <div class="parallax-mirror"
-    style="visibility: visible; z-index: -100; position: fixed; top: 0px; left: 0px; overflow: hidden; transform: translate3d(0px, 0px, 0px); height: 930px; width: 839.513px;">
-    <img class="parallax-slider" src="./img/portada.jpg"
-      style="transform: translate3d(-61px, 0px, 0px); position: absolute; height: 736px; width: 962px; max-width: none;">
-  </div>
-  <div class="parallax-mirror"
-    style="visibility: hidden; z-index: -100; position: fixed; top: 0px; left: 0px; overflow: hidden; height: 886.713px; width: 1526.4px;">
-    <img class="parallax-slider" src="./boda_files/instagram.webp"
-      style="position: absolute; height: 791px; width: 1526.4px; max-width: none;">
-  </div>
-
-
 
   <!-- Loader -->
   <!-- START PRELOADER AREA-->
@@ -949,30 +947,13 @@
 
               <form id="formAsistencia" action="https://fixdate.io/ar/modelo-invitacion/viaje">
 
+                <div class="form-group" id="personas-confirmacion" style="display: flex; flex-direction: column;align-items: start;margin: 0 auto;width: fit-content;">
 
-                <div class="form-group d-flex justify-content-around custom-control custom-radio custom-control-inline">
-                  <div class="form-check">
-                    <input class="form-check-input custom-control-input" type="radio" name="asistencia" id="1"
-                      value="Si" checked="">
-                    <label class="form-check-label custom-control-label" for="1">
-                      Si! Confirmo </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="custom-control-input" type="radio" name="asistencia" id="2" value="No">
-                    <label class="custom-control-label" for="2">
-                      No puedo :( </label>
-                  </div>
                 </div>
-
-                <div class="form-group">
-                  <input type="text" class="form-control" id="nombreAsistente" name="nombre"
-                    placeholder="Ingrese su nombre completo">
-                </div>
-
 
                 <div class="form-group">
                   <textarea id="comentariosAsistente" class="form-control" name="comentarios" rows="2"
-                    placeholder="Ingrese algun dato importante, Ej: Soy vegetariano"></textarea>
+                    placeholder="Ingrese algun dato importante, Ej: Juanito es vegetariano"></textarea>
                 </div>
 
                 <input id="eventoAsistencia" type="hidden" name="evento" value="">
@@ -1495,6 +1476,45 @@
     var latitudCeremonia = -34.6201481;
     var longitudCeremonia = -58.4046887;
 
+    var invitados = [
+      {id: "abuelos_y_tios", personas: ["Ale", "Grace", "Nico", "Georgi", "Giuli"]},
+      {id: "abuelitos", personas: ["Nico", "Primi"]},
+      {id: "nona", personas: ["Nona"]},
+      {id: "", personas: []},
+      {id: "", personas: []},
+      {id: "", personas: []},
+      {id: "", personas: []},
+      {id: "", personas: []},
+      {id: "", personas: []},
+      {id: "", personas: []},
+    ]
+
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
+
+    var invitacionId = params.invitacion;
+
+    var personasEnEstaInvitacion = invitados.find(x => x.id == invitacionId)?.personas;
+
+    if (personasEnEstaInvitacion) {
+      let elem = document.getElementById("personas-confirmacion");
+      personasEnEstaInvitacion.forEach((persona, index) => {
+        var divNode = document.createElement("div");
+        divNode.className = "form-check";
+        var checkNode = document.createElement("input");
+        var labelNode = document.createElement("label");
+        checkNode.className = "form-check-input";
+        checkNode.setAttribute("type", "checkbox");
+        checkNode.setAttribute("value", "");
+        checkNode.setAttribute("id", "persona-" + index);
+        labelNode.innerText = persona;
+        labelNode.className = "form-check-label";
+        divNode.appendChild(checkNode);
+        divNode.appendChild(labelNode);
+        elem.appendChild(divNode);
+      });
+    }
 
   </script>
 
