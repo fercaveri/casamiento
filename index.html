@@ -1480,44 +1480,69 @@
       {id: "abuelos_y_tios", personas: ["Ale", "Grace", "Nico", "Georgi", "Giuli"]},
       {id: "abuelitos", personas: ["Nico", "Primi"]},
       {id: "nona", personas: ["Nona"]},
-      {id: "", personas: []},
-      {id: "", personas: []},
-      {id: "", personas: []},
-      {id: "", personas: []},
-      {id: "", personas: []},
-      {id: "", personas: []},
-      {id: "", personas: []},
     ]
-
-    const params = new Proxy(new URLSearchParams(window.location.search), {
-      get: (searchParams, prop) => searchParams.get(prop),
-    });
-
-    var invitacionId = params.invitacion;
-
-    var personasEnEstaInvitacion = invitados.find(x => x.id == invitacionId)?.personas;
-
-    if (personasEnEstaInvitacion) {
-      let elem = document.getElementById("personas-confirmacion");
-      personasEnEstaInvitacion.forEach((persona, index) => {
-        var divNode = document.createElement("div");
-        divNode.className = "form-check";
-        var checkNode = document.createElement("input");
-        var labelNode = document.createElement("label");
-        checkNode.className = "form-check-input";
-        checkNode.setAttribute("type", "checkbox");
-        checkNode.setAttribute("value", "");
-        checkNode.setAttribute("id", "persona-" + index);
-        labelNode.innerText = persona;
-        labelNode.className = "form-check-label";
-        divNode.appendChild(checkNode);
-        divNode.appendChild(labelNode);
-        elem.appendChild(divNode);
-      });
-    }
-
   </script>
 
+  <!-- GOOGLE SHEETS -->
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script>
+    function start() {
+      gapi.client.init({
+        'apiKey': 'AIzaSyCc-5iSAetIee8XedNnBAhBX9hVsikOSLw',
+        'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4']
+      }).then(function() {
+        return gapi.client.sheets.spreadsheets.values.get({
+          spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0',
+          range: "A1:C133",
+        });
+      }).then(function(response) {
+        var invitados = response.values;
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        var invitacionId = params.invitacion;
+
+        var invitadosFiltrados = invitados.filter(x => x[0] == invitacionId);
+        var personasEnEstaInvitacion = [];
+
+        if (invitadosFiltrados){
+          invitadosFiltrados.forEach(excelRow => {
+            personasEnEstaInvitacion.push(excelRow[1]);
+          });
+        }
+
+        if (personasEnEstaInvitacion) {
+          let elem = document.getElementById("personas-confirmacion");
+          personasEnEstaInvitacion.forEach((persona, index) => {
+            var divNode = document.createElement("div");
+            divNode.className = "form-check";
+            var checkNode = document.createElement("input");
+            var labelNode = document.createElement("label");
+            checkNode.className = "form-check-input";
+            checkNode.setAttribute("type", "checkbox");
+            checkNode.setAttribute("value", "");
+            checkNode.setAttribute("id", "persona-" + index);
+            labelNode.innerText = persona;
+            labelNode.className = "form-check-label";
+            divNode.appendChild(checkNode);
+            divNode.appendChild(labelNode);
+            elem.appendChild(divNode);
+          });
+        }
+
+      }, function(reason) {
+        console.log("ERROR");
+        console.log(reason);
+      });
+    };
+    
+    function gapiLoaded() {
+      gapi.load('client', start);
+    }
+    
+  </script>
 
   <!-- Idioma por defecto js -->
   <script>
@@ -2667,37 +2692,6 @@
     <span
       style="position: absolute; font-size: 300px; width: auto; height: auto; margin: 0px; padding: 0px; font-family: Roboto, Arial, sans-serif;">BESbswy</span>
   </div>
-
-  <!-- GOOGLE SHEETS -->
-  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-  <script>
-    function start() {
-      // 2. Initialize the JavaScript client library.
-      gapi.client.init({
-        'apiKey': 'AIzaSyCc-5iSAetIee8XedNnBAhBX9hVsikOSLw',
-        'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-        "scope": 'https://www.googleapis.com/auth/spreadsheets'
-      }).then(function() {
-        console.log(gapi);
-        // 3. Initialize and make the API request.
-        return gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0',
-          range: "A1:C133",
-        });
-      }).then(function(response) {
-        console.log(response.result);
-      }, function(reason) {
-        console.log("ERROR");
-        console.log(reason);
-      });
-    };
-    
-    function gapiLoaded() {
-      gapi.load('client', start);
-    }
-    
-  </script>
-
 
 </body>
 
