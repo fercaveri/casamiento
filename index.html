@@ -1496,8 +1496,7 @@
           range: "A1:C133",
         });
       }).then(function(response) {
-        console.log(response);
-        var invitados = response.values;
+        var invitados = response.result.values;
 
         const params = new Proxy(new URLSearchParams(window.location.search), {
           get: (searchParams, prop) => searchParams.get(prop),
