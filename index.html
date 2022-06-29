@@ -1513,8 +1513,8 @@
           });
         }
 
+        let elem = document.getElementById("personas-confirmacion");
         if (personasEnEstaInvitacion) {
-          let elem = document.getElementById("personas-confirmacion");
           personasEnEstaInvitacion.forEach((persona, index) => {
             var divNode = document.createElement("div");
             divNode.className = "form-check";
@@ -1523,13 +1523,18 @@
             checkNode.className = "form-check-input";
             checkNode.setAttribute("type", "checkbox");
             checkNode.setAttribute("value", "");
-            checkNode.setAttribute("id", "persona-" + index);
+            checkNode.setAttribute("id", "persona-" + (index+1));
             labelNode.innerText = persona;
             labelNode.className = "form-check-label";
             divNode.appendChild(checkNode);
             divNode.appendChild(labelNode);
             elem.appendChild(divNode);
           });
+        }
+        else {
+          let pNode = document.createElement("p");
+          pNode.innerText = "Ninguna invitacion seleccionada o invalida".
+          elem.appendChild(pNode);
         }
 
       }, function(reason) {
@@ -2034,30 +2039,63 @@
         $("#sendAsistencia").text(lang_informandoAsistencia + "...");
         $("#sendAsistencia").prop("disabled", true);
 
+        let invIndex = invitdos.indexOf(invitadosFiltrados[0]);
+
+        let cantInvitados = personasEnEstaInvitacion.length;
+
         // Obtengo el Form.
         var formulario = $("#formAsistencia")[0];
 
         // Obtengo los datos del formulario
         var datos = new FormData(formulario);
 
+        let siValue = [
+          [
+            "SI"
+          ],
+        ];
+        let noValue = [
+          [
+            "NO"
+          ],
+        ];
+        let data = [];
+        data.push({
+          range: range,
+          values: values
+        });
 
-        // Visualizar como viajan los datos
-        // for (var pair of datos.entries()) {
-        //   console.log(pair[0] + ", " + pair[1]);
-        // }
-
-
-        // Envio con fetch los datos mediante POST
-        fetch(_pathApp + "producto/fetchs/confirmar-asistencia.php", {
-          method: "POST",
-          body: datos
+        personasEnEstaInvitacion.forEach((pers, idx) => {
+          let checkbox = document.getElementById("persona-" + (idx+1));
+          let range = `C${invIndex}:C${invIndex}`;
+          if (checkbox.checked) {
+            data.push({
+              range: range,
+              values: siValue
+            });
+          }
+          else {
+            data.push({
+              range: range,
+              values: noValue
+            });
+          }
         })
-          // Promesas fetch
-          .then(res => res.json())
-          .then(data => {
+
+        var body = {
+          data: data,
+          valueInputOption: "RAW"
+        };
+
+        gapi.client.sheets.spreadsheets.values.batchUpdate({
+          spreadsheetId: "1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0",
+          resource: body
+        }).then((response) => {
+          var result = response.result;
+          console.log(`${result.totalUpdatedCells} cells updated.`);
 
             // Si recibo error 
-            if (data.error === true) {
+            if (result.error === true) {
 
               $("#sendAsistencia").text(lang_confirmarAsistencia);
               $("#sendAsistencia").prop("disabled", false);
@@ -2067,7 +2105,7 @@
             }
 
             // Si no hay error 
-            if (data.error === false) {
+            if (result.error === false) {
 
               $("#sendAsistencia").text(lang_confirmarAsistencia);
               $("#sendAsistencia").prop("disabled", false);
@@ -2076,8 +2114,6 @@
               // Oculto elementos del form y reseteo
               $('#formAsistencia')[0].reset();
               $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').hide();
-
-
 
               // Acomodo el css para centrar mensaje
               $('#modalAsistencia .modal-body').addClass('fix-height');
@@ -2100,10 +2136,11 @@
 
             }
 
+          }, function(reason) {
+            console.log("ERROR UPDATING");
+            console.log(reason);
           });
       }
-
-
     });
   </script>
 
