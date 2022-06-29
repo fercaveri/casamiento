@@ -1496,6 +1496,7 @@
           range: "A1:C133",
         });
       }).then(function(response) {
+        console.log(response);
         var invitados = response.values;
 
         const params = new Proxy(new URLSearchParams(window.location.search), {
