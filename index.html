@@ -2667,6 +2667,53 @@
     <span
       style="position: absolute; font-size: 300px; width: auto; height: auto; margin: 0px; padding: 0px; font-family: Roboto, Arial, sans-serif;">BESbswy</span>
   </div>
+
+  <!-- GOOGLE SHEETS -->
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script>
+    function start() {
+      // 2. Initialize the JavaScript client library.
+      console.log("A");
+      gapi.client.init({
+        'apiKey': 'AIzaSyCc-5iSAetIee8XedNnBAhBX9hVsikOSLw',
+        'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+      }).then(function() {
+        console.log("B")
+        // 3. Initialize and make the API request.
+        return gapi.client.people.people.get({
+          'resourceName': 'people/me',
+          'requestMask.includeField': 'person.names'
+        });
+      }).then(function(response) {
+        console.log("C")
+        console.log(response.result);
+      }, function(reason) {
+        console.log('Error: ' + reason.result.error.message);
+      });
+    };
+    
+    function gapiLoaded() {
+      gapi.load('client', start);
+    }
+
+    setTimeout(() => {
+      console.log("D")
+      try {
+        console.log(gapi)
+        response = gapi.client.sheets.spreadsheets.values.get({
+          spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0'
+        }).then(res => {
+          console.log(res);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    }, 1000)
+
+    
+  </script>
+
+
 </body>
 
 </html>
