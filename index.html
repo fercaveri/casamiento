@@ -34,13 +34,16 @@
       text-decoration: none;
     }
 
-    input[type=checkbox]
-    {
+    input[type=checkbox] {
       /* Double-sized Checkboxes */
-      -ms-transform: scale(2); /* IE */
-      -moz-transform: scale(2); /* FF */
-      -webkit-transform: scale(2); /* Safari and Chrome */
-      -o-transform: scale(2); /* Opera */
+      -ms-transform: scale(2);
+      /* IE */
+      -moz-transform: scale(2);
+      /* FF */
+      -webkit-transform: scale(2);
+      /* Safari and Chrome */
+      -o-transform: scale(2);
+      /* Opera */
       padding: 10px;
     }
   </style>
@@ -752,7 +755,10 @@
 
         </div>
 
-        <div><p>CBU: 0170116240000007962884</p><p>ALIAS: ARBOL.POLLO.MITAD</p></div>
+        <div>
+          <p>CBU: 0170116240000007962884</p>
+          <p>ALIAS: ARBOL.POLLO.MITAD</p>
+        </div>
 
       </div>
     </div>
@@ -812,7 +818,7 @@
           class="col-md-6 col-acciones-footer d-flex justify-content-center justify-content-md-center align-items-center">
 
           <ul>
-<!-- 
+            <!-- 
             <li>
               <a href="https://fixdate.io/ar/modelo-invitacion/viaje#" data-evento="Ceremonia"
                 class="confirmar-asistencia">Confirmar asistencia a ceremonia</a>
@@ -947,7 +953,8 @@
 
               <form id="formAsistencia" action="https://fixdate.io/ar/modelo-invitacion/viaje">
 
-                <div class="form-group" id="personas-confirmacion" style="display: flex; flex-direction: column;align-items: start;margin: 0 auto;width: fit-content;">
+                <div class="form-group" id="personas-confirmacion"
+                  style="display: flex; flex-direction: column;align-items: start;margin: 0 auto;width: fit-content;">
 
                 </div>
 
@@ -1477,9 +1484,9 @@
     var longitudCeremonia = -58.4046887;
 
     var invitados = [
-      {id: "abuelos_y_tios", personas: ["Ale", "Grace", "Nico", "Georgi", "Giuli"]},
-      {id: "abuelitos", personas: ["Nico", "Primi"]},
-      {id: "nona", personas: ["Nona"]},
+      { id: "abuelos_y_tios", personas: ["Ale", "Grace", "Nico", "Georgi", "Giuli"] },
+      { id: "abuelitos", personas: ["Nico", "Primi"] },
+      { id: "nona", personas: ["Nona"] },
     ]
   </script>
 
@@ -1490,12 +1497,12 @@
       gapi.client.init({
         'apiKey': 'AIzaSyCc-5iSAetIee8XedNnBAhBX9hVsikOSLw',
         'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4']
-      }).then(function() {
+      }).then(function () {
         return gapi.client.sheets.spreadsheets.values.get({
           spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0',
           range: "A1:C133",
         });
-      }).then(function(response) {
+      }).then(function (response) {
         var invitados = response.result.values;
 
         const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -1507,7 +1514,7 @@
         var invitadosFiltrados = invitados.filter(x => x[0] == invitacionId);
         var personasEnEstaInvitacion = [];
 
-        if (invitadosFiltrados){
+        if (invitadosFiltrados) {
           invitadosFiltrados.forEach(excelRow => {
             personasEnEstaInvitacion.push(excelRow[1]);
           });
@@ -1523,7 +1530,7 @@
             checkNode.className = "form-check-input";
             checkNode.setAttribute("type", "checkbox");
             checkNode.setAttribute("value", "");
-            checkNode.setAttribute("id", "persona-" + (index+1));
+            checkNode.setAttribute("id", "persona-" + (index + 1));
             labelNode.innerText = persona;
             labelNode.className = "form-check-label";
             divNode.appendChild(checkNode);
@@ -1534,19 +1541,19 @@
         else {
           let pNode = document.createElement("p");
           pNode.innerText = "Ninguna invitacion seleccionada o invalida".
-          elem.appendChild(pNode);
+            elem.appendChild(pNode);
         }
 
-      }, function(reason) {
+      }, function (reason) {
         console.log("ERROR");
         console.log(reason);
       });
     };
-    
+
     function gapiLoaded() {
       gapi.load('client', start);
     }
-    
+
   </script>
 
   <!-- Idioma por defecto js -->
@@ -1977,170 +1984,116 @@
     });
 
 
-    // Validacion de form.
-    function isOkAsistencia() {
-
-      // Remuevo mensajes de error anteriores
-      $("#error-form").remove();
-
-      // Variables necesarias para la validacion
-      var flag = true;
-      var err = '';
-
-
-      // Variables del form para validar.
-      var asistenteName = $.trim($("#nombreAsistente").val());
-      var asistenteComentarios = $.trim($("#comentariosAsistente").val());
-
-
-      // Nombre
-      if (asistenteName == '') {
-        flag = false;
-        err = lang_nombreRequerido;
-      } else {
-        if (asistenteName.length > 20) {
-          flag = false;
-          err = lang_caracteresNombreAsistencia;
-        }
-      }
-
-      // Comentarios
-      if (asistenteComentarios != '') {
-        if (asistenteComentarios.length > 100) {
-          flag = false;
-          err = lang_caracteresComentariosAsistencia;
-        }
-      }
-
-      // Si hay error
-      if (flag === false) {
-
-        // Imprimo el error
-        $('#formAsistencia').after('<span id="error-form">' + err + '</span>');
-
-      }
-
-      // Retorno el estado de la validacion
-      return flag;
-
-    }
-
-
     // Enviar asistencia
     $('body').on('click', '#sendAsistencia', function (e) {
 
       e.preventDefault();
 
+      // Load and disabled buttom.
+      $("#sendAsistencia").text(lang_informandoAsistencia + "...");
+      $("#sendAsistencia").prop("disabled", true);
 
-      if (isOkAsistencia()) //Form bien validado
-      {
+      let invIndex = invitdos.indexOf(invitadosFiltrados[0]);
 
-        // Load and disabled buttom.
-        $("#sendAsistencia").text(lang_informandoAsistencia + "...");
-        $("#sendAsistencia").prop("disabled", true);
+      let cantInvitados = personasEnEstaInvitacion.length;
 
-        let invIndex = invitdos.indexOf(invitadosFiltrados[0]);
+      // Obtengo el Form.
+      var formulario = $("#formAsistencia")[0];
 
-        let cantInvitados = personasEnEstaInvitacion.length;
+      // Obtengo los datos del formulario
+      var datos = new FormData(formulario);
 
-        // Obtengo el Form.
-        var formulario = $("#formAsistencia")[0];
+      let siValue = [
+        [
+          "SI"
+        ],
+      ];
+      let noValue = [
+        [
+          "NO"
+        ],
+      ];
+      let data = [];
+      data.push({
+        range: range,
+        values: values
+      });
 
-        // Obtengo los datos del formulario
-        var datos = new FormData(formulario);
-
-        let siValue = [
-          [
-            "SI"
-          ],
-        ];
-        let noValue = [
-          [
-            "NO"
-          ],
-        ];
-        let data = [];
-        data.push({
-          range: range,
-          values: values
-        });
-
-        personasEnEstaInvitacion.forEach((pers, idx) => {
-          let checkbox = document.getElementById("persona-" + (idx+1));
-          let range = `C${invIndex}:C${invIndex}`;
-          if (checkbox.checked) {
-            data.push({
-              range: range,
-              values: siValue
-            });
-          }
-          else {
-            data.push({
-              range: range,
-              values: noValue
-            });
-          }
-        })
-
-        var body = {
-          data: data,
-          valueInputOption: "RAW"
-        };
-
-        gapi.client.sheets.spreadsheets.values.batchUpdate({
-          spreadsheetId: "1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0",
-          resource: body
-        }).then((response) => {
-          var result = response.result;
-          console.log(`${result.totalUpdatedCells} cells updated.`);
-
-            // Si recibo error 
-            if (result.error === true) {
-
-              $("#sendAsistencia").text(lang_confirmarAsistencia);
-              $("#sendAsistencia").prop("disabled", false);
-
-              // Imprimo el error
-              $('#formAsistencia').after('<span id="error-form">' + data.desc + '</span>');
-            }
-
-            // Si no hay error 
-            if (result.error === false) {
-
-              $("#sendAsistencia").text(lang_confirmarAsistencia);
-              $("#sendAsistencia").prop("disabled", false);
-
-
-              // Oculto elementos del form y reseteo
-              $('#formAsistencia')[0].reset();
-              $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').hide();
-
-              // Acomodo el css para centrar mensaje
-              $('#modalAsistencia .modal-body').addClass('fix-height');
-
-              // Muestro mensaje de exito
-              $('#modalAsistencia .msj-content').html(
-                "<h5>" + lang_asistenciaMsjExito_1 + "</h5><p>" + lang_asistenciaMsjExito_2 + "</p>"
-              ).show();
-
-
-              // Cierro modal y vuelvo a activar form
-              setTimeout(function () {
-
-                $('#modalAsistencia').modal('hide');
-                $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').show();
-                $('#modalAsistencia .msj-content').html('').hide();
-                $('#modalAsistencia .modal-body').removeClass('fix-height');
-
-              }, 4000);
-
-            }
-
-          }, function(reason) {
-            console.log("ERROR UPDATING");
-            console.log(reason);
+      personasEnEstaInvitacion.forEach((pers, idx) => {
+        let checkbox = document.getElementById("persona-" + (idx + 1));
+        let range = `C${invIndex}:C${invIndex}`;
+        if (checkbox.checked) {
+          data.push({
+            range: range,
+            values: siValue
           });
-      }
+        }
+        else {
+          data.push({
+            range: range,
+            values: noValue
+          });
+        }
+      })
+
+      var body = {
+        data: data,
+        valueInputOption: "RAW"
+      };
+
+      gapi.client.sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: "1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0",
+        resource: body
+      }).then((response) => {
+        var result = response.result;
+        console.log(`${result.totalUpdatedCells} cells updated.`);
+
+        // Si recibo error 
+        if (result.error === true) {
+
+          $("#sendAsistencia").text(lang_confirmarAsistencia);
+          $("#sendAsistencia").prop("disabled", false);
+
+          // Imprimo el error
+          $('#formAsistencia').after('<span id="error-form">' + data.desc + '</span>');
+        }
+
+        // Si no hay error 
+        if (result.error === false) {
+
+          $("#sendAsistencia").text(lang_confirmarAsistencia);
+          $("#sendAsistencia").prop("disabled", false);
+
+
+          // Oculto elementos del form y reseteo
+          $('#formAsistencia')[0].reset();
+          $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').hide();
+
+          // Acomodo el css para centrar mensaje
+          $('#modalAsistencia .modal-body').addClass('fix-height');
+
+          // Muestro mensaje de exito
+          $('#modalAsistencia .msj-content').html(
+            "<h5>" + lang_asistenciaMsjExito_1 + "</h5><p>" + lang_asistenciaMsjExito_2 + "</p>"
+          ).show();
+
+
+          // Cierro modal y vuelvo a activar form
+          setTimeout(function () {
+
+            $('#modalAsistencia').modal('hide');
+            $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').show();
+            $('#modalAsistencia .msj-content').html('').hide();
+            $('#modalAsistencia .modal-body').removeClass('fix-height');
+
+          }, 4000);
+
+        }
+
+      }, function (reason) {
+        console.log("ERROR UPDATING");
+        console.log(reason);
+      });
     });
   </script>
 
@@ -2481,8 +2434,9 @@
 
 
   <!-- Api Maps-->
-  <script async="" defer="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3ZK1od6HtymslnbVFuzpUbMfrCRVqzM&amp;callback=initMap&amp;r=1987914841">
-  </script>
+  <script async="" defer=""
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_3ZK1od6HtymslnbVFuzpUbMfrCRVqzM&amp;callback=initMap&amp;r=1987914841">
+    </script>
 
 
   <script>
