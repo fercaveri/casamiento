@@ -2680,12 +2680,14 @@
         console.log(gapi);
         // 3. Initialize and make the API request.
         return gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0'
+          spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0',
+          range: "A1:C133",
         });
       }).then(function(response) {
         console.log(response.result);
       }, function(reason) {
-        console.log('Error: ' + reason.result.error.message);
+        console.log("ERROR");
+        console.log(reason);
       });
     };
     
