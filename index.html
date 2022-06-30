@@ -172,6 +172,7 @@
     src="https://maps.googleapis.com/maps-api-v3/api/js/49/6/intl/es_419/stats.js"></script>
   <script type="text/javascript" charset="UTF-8"
     src="https://maps.googleapis.com/maps-api-v3/api/js/49/6/intl/es_419/onion.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 </head>
 
 <body data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0">
@@ -1491,7 +1492,7 @@
   </script>
 
   <!-- GOOGLE SHEETS -->
-  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <!-- <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script> -->
   <script>
     var invitados = [];
     var invitadosFiltrados = [];
@@ -1501,17 +1502,10 @@
     });
     var invitacionId = params.invitacion;
 
-    function start() {
-      gapi.client.init({
-        'apiKey': 'AIzaSyCc-5iSAetIee8XedNnBAhBX9hVsikOSLw',
-        'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4']
-      }).then(function () {
-        return gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0',
-          range: "A1:C133",
-        });
-      }).then(function (response) {
-        invitados = response.result.values;
+    axios.get('https://sheetdb.io/api/v1/v7gtkfpag23yf')
+      .then(response => {
+        console.log(response.data);
+        invitados = response.data;
 
         invitadosFiltrados = invitados.filter(x => x[0] == invitacionId);
 
@@ -1544,17 +1538,7 @@
           pNode.innerText = "Ninguna invitacion seleccionada o invalida".
             elem.appendChild(pNode);
         }
-
-      }, function (reason) {
-        console.log("ERROR");
-        console.log(reason);
       });
-    };
-
-    function gapiLoaded() {
-      gapi.load('client', start);
-    }
-
   </script>
 
   <!-- Idioma por defecto js -->
@@ -2004,94 +1988,58 @@
       // Obtengo los datos del formulario
       var datos = new FormData(formulario);
 
-      let siValue = [
-        [
-          "SI"
-        ],
-      ];
-      let noValue = [
-        [
-          "NO"
-        ],
-      ];
-      let data = [];
-
       personasEnEstaInvitacion.forEach((pers, idx) => {
         let checkbox = document.getElementById("persona-" + (idx + 1));
-        let range = `C${invIndex}:C${invIndex}`;
-        if (checkbox.checked) {
-          data.push({
-            range: range,
-            values: siValue
-          });
-        }
-        else {
-          data.push({
-            range: range,
-            values: noValue
-          });
-        }
-      })
 
-      var body = {
-        data: data,
-        valueInputOption: "RAW"
-      };
+        var body = {
+          confirma: checkbox.checked ? "SI" : "NO"
+        };
 
-      gapi.client.sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: "1VqFlodyrw_n9_YRh2pY19GuOXd6AXZUwjV_A7t78_Z0",
-        resource: body
-      }).then((response) => {
-        var result = response.result;
-        console.log(`${result.totalUpdatedCells} cells updated.`);
+        axios.patch(`https://sheetdb.io/api/v1/v7gtkfpag23yf/index/${index}`,
+          body
+        ).then((response) => {
+          var result = response.data;
+          // Si no hay error 
+          if (idx+1 == cantInvitados) {
 
-        // Si recibo error 
-        if (result.error === true) {
-
-          $("#sendAsistencia").text(lang_confirmarAsistencia);
-          $("#sendAsistencia").prop("disabled", false);
-
-          // Imprimo el error
-          $('#formAsistencia').after('<span id="error-form">' + data.desc + '</span>');
-        }
-
-        // Si no hay error 
-        if (result.error === false) {
-
-          $("#sendAsistencia").text(lang_confirmarAsistencia);
-          $("#sendAsistencia").prop("disabled", false);
+            $("#sendAsistencia").text(lang_confirmarAsistencia);
+            $("#sendAsistencia").prop("disabled", false);
 
 
-          // Oculto elementos del form y reseteo
-          $('#formAsistencia')[0].reset();
-          $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').hide();
+            // Oculto elementos del form y reseteo
+            $('#formAsistencia')[0].reset();
+            $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').hide();
 
-          // Acomodo el css para centrar mensaje
-          $('#modalAsistencia .modal-body').addClass('fix-height');
+            // Acomodo el css para centrar mensaje
+            $('#modalAsistencia .modal-body').addClass('fix-height');
 
-          // Muestro mensaje de exito
-          $('#modalAsistencia .msj-content').html(
-            "<h5>" + lang_asistenciaMsjExito_1 + "</h5><p>" + lang_asistenciaMsjExito_2 + "</p>"
-          ).show();
+            // Muestro mensaje de exito
+            $('#modalAsistencia .msj-content').html(
+              "<h5>" + lang_asistenciaMsjExito_1 + "</h5><p>" + lang_asistenciaMsjExito_2 + "</p>"
+            ).show();
 
 
-          // Cierro modal y vuelvo a activar form
-          setTimeout(function () {
+            // Cierro modal y vuelvo a activar form
+            setTimeout(function () {
 
-            $('#modalAsistencia').modal('hide');
-            $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').show();
-            $('#modalAsistencia .msj-content').html('').hide();
-            $('#modalAsistencia .modal-body').removeClass('fix-height');
+              $('#modalAsistencia').modal('hide');
+              $('#modalAsistencia .formulario-content, #modalAsistencia .modal-footer, #modalAsistencia h5').show();
+              $('#modalAsistencia .msj-content').html('').hide();
+              $('#modalAsistencia .modal-body').removeClass('fix-height');
 
-          }, 4000);
+            }, 4000);
 
-        }
+          }
 
-      }, function (reason) {
-        console.log("ERROR UPDATING");
-        console.log(reason);
+        }, function (reason) {
+          console.log("ERROR UPDATING");
+          console.log(reason);
+        });
       });
-    });
+
+
+
+    })
   </script>
 
 
