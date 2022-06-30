@@ -1507,11 +1507,11 @@
         console.log(response.data);
         invitados = response.data;
 
-        invitadosFiltrados = invitados.filter(x => x[0] == invitacionId);
+        invitadosFiltrados = invitados.filter(x => x.id == invitacionId);
 
         if (invitadosFiltrados) {
           invitadosFiltrados.forEach(excelRow => {
-            personasEnEstaInvitacion.push(excelRow[1]);
+            personasEnEstaInvitacion.push(excelRow.nombre);
           });
         }
 
