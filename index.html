@@ -1978,8 +1978,6 @@
       $("#sendAsistencia").text(lang_informandoAsistencia + "...");
       $("#sendAsistencia").prop("disabled", true);
 
-      let invIndex = invitados.indexOf(invitadosFiltrados[0]);
-
       let cantInvitados = personasEnEstaInvitacion.length;
 
       // Obtengo el Form.
@@ -1988,14 +1986,14 @@
       // Obtengo los datos del formulario
       var datos = new FormData(formulario);
 
-      personasEnEstaInvitacion.forEach((pers, idx) => {
+      invitadosFiltrados.forEach((pers, idx) => {
         let checkbox = document.getElementById("persona-" + (idx + 1));
 
         var body = {
           confirma: checkbox.checked ? "SI" : "NO"
         };
 
-        axios.patch(`https://sheetdb.io/api/v1/v7gtkfpag23yf/index/${index}`,
+        axios.patch(`https://sheetdb.io/api/v1/v7gtkfpag23yf/index/${pers.index}`,
           body
         ).then((response) => {
           var result = response.data;
