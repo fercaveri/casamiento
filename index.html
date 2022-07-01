@@ -877,24 +877,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-
-
           <p>
-            Desarrollado con <span class="heart">🧡</span> por <a href="https://fixdate.io/ar/"
-              target="_blank">Fixdate</a>
+            Orne <span class="heart">🧡</span> Fer </a>
           </p>
-
-
-          <!-- Modal cambio de idioma -->
-
-          <p>
-            <img class="current-flag" width="20" height="20" src="./boda_files/es-AR.svg" alt="">
-            <a href="https://fixdate.io/ar/modelo-invitacion/viaje#" data-toggle="modal"
-              data-target="#modal-lang">Cambiar pais</a>
-          </p>
-
-
-
         </div>
       </div>
     </div>
@@ -1101,7 +1086,7 @@
 
           <div class="modal-body">
 
-            <p>Contenido Dress Code</p>
+            <p>Podes ir como quieras, pero evitar vestidos muy negros.</p>
 
           </div>
 
@@ -1149,7 +1134,8 @@
 
           <div class="modal-body">
 
-            <p>Contenido Tips y Notas</p>
+            <p>Es una fiesta que no va a terminar muy tarde y va a arrancar temprano.</p>
+            <p>Veni con muy buena onda y con ganas de pasarla bomba.</p>
 
           </div>
 
@@ -1998,7 +1984,7 @@
         ).then((response) => {
           var result = response.data;
           // Si no hay error 
-          if (idx+1 == cantInvitados) {
+          if (idx + 1 == cantInvitados) {
 
             $("#sendAsistencia").text(lang_confirmarAsistencia);
             $("#sendAsistencia").prop("disabled", false);
@@ -2199,64 +2185,64 @@
 
 
         // Envio con fetch los datos mediante POST
-        fetch(_pathApp + "producto/fetchs/sugerir-cancion.php", {
-          method: "POST",
-          body: datos
-        })
-          // Promesas fetch
-          .then(res => res.json())
-          .then(data => {
+        //   fetch(_pathApp + "producto/fetchs/sugerir-cancion.php", {
+        //     method: "POST",
+        //     body: datos
+        //   })
+        //     // Promesas fetch
+        //     .then(res => res.json())
+        //     .then(data => {
 
-            // Si recibo error 
-            if (data.error === true) {
+        //       // Si recibo error 
+        //       if (data.error === true) {
 
-              $("#sendSugerenciaCancion").text(lang_sugerirCancion);
-              $("#sendSugerenciaCancion").prop("disabled", false);
+        //         $("#sendSugerenciaCancion").text(lang_sugerirCancion);
+        //         $("#sendSugerenciaCancion").prop("disabled", false);
 
-              // Imprimo el error
-              $('#formSugerirCancion').after('<span id="error-form">' + data.desc + '</span>');
-            }
+        //         // Imprimo el error
+        //         $('#formSugerirCancion').after('<span id="error-form">' + data.desc + '</span>');
+        //       }
 
-            // Si no hay error 
-            if (data.error === false) {
+        //       // Si no hay error 
+        //       if (data.error === false) {
 
-              $("#sendSugerenciaCancion").text(lang_sugerirCancion);
-              $("#sendSugerenciaCancion").prop("disabled", false);
-
-
-              // Oculto elementos del form y reseteo
-              $('#formSugerirCancion')[0].reset();
-              $('#modalSugerirCancion .formulario-content, #modalSugerirCancion .modal-footer, #modalSugerirCancion h5').hide();
+        $("#sendSugerenciaCancion").text(lang_sugerirCancion);
+        $("#sendSugerenciaCancion").prop("disabled", false);
 
 
-              // Acomodo el css para centrar mensaje
-              $('#modalSugerirCancion .modal-body').addClass('fix-height');
+        // Oculto elementos del form y reseteo
+        $('#formSugerirCancion')[0].reset();
+        $('#modalSugerirCancion .formulario-content, #modalSugerirCancion .modal-footer, #modalSugerirCancion h5').hide();
 
 
-              // Muestro mensaje de exito
-
-              $('#modalSugerirCancion .msj-content').html(
-                "<h5>" + lang_sugerirCancionMsjExito_1 + "</h5><p>" + lang_sugerirCancionMsjExito_2 + "</p>"
-              ).show();
+        // Acomodo el css para centrar mensaje
+        $('#modalSugerirCancion .modal-body').addClass('fix-height');
 
 
-              // Cierro modal y vuelvo a activar form
-              setTimeout(function () {
+        // Muestro mensaje de exito
 
-                $('#modalSugerirCancion').modal('hide');
-                $('#modalSugerirCancion .formulario-content, #modalSugerirCancion .modal-footer, #modalSugerirCancion h5').show();
-                $('#modalSugerirCancion .msj-content').html('').hide();
-                $('#modalSugerirCancion .modal-body').removeClass('fix-height');
-
-              }, 4000);
-
-            }
-
-          });
-      }
+        $('#modalSugerirCancion .msj-content').html(
+          "<h5>" + lang_sugerirCancionMsjExito_1 + "</h5><p>" + lang_sugerirCancionMsjExito_2 + "</p>"
+        ).show();
 
 
-    });
+        // Cierro modal y vuelvo a activar form
+        setTimeout(function () {
+
+          $('#modalSugerirCancion').modal('hide');
+          $('#modalSugerirCancion .formulario-content, #modalSugerirCancion .modal-footer, #modalSugerirCancion h5').show();
+          $('#modalSugerirCancion .msj-content').html('').hide();
+          $('#modalSugerirCancion .modal-body').removeClass('fix-height');
+
+        }, 4000);
+
+        //       }
+
+        //     });
+        // }
+
+
+      });
   </script>
 
 
