@@ -2075,7 +2075,7 @@
         }
 
         axios.post(`https://sheetdb.io/api/v1/vnx3gz0nuijxs`,
-          { data: [{ nombre: datos.entries()[0][1], cancion: datos.entries()[1][1], descripcion: datos.entries()[2][1] }] }
+          { data: body }
         ).then((response) => {
           console.log("Enviado");
 
