@@ -2068,13 +2068,19 @@
 
         // Obtengo los datos del formulario
         var datos = new FormData(formulario);
-
+        
+        console.log(datos);
 
         // Visualizar como viajan los datos
         for (var pair of datos.entries()) {
           console.log(pair[0] + ", " + pair[1]);
         }
 
+        axios.patch(`https://sheetdb.io/api/v1/vnx3gz0nuijxs`,
+          { data: [{ nombre: "carlos", cancion: "Titi me pregunto", descripcion: "ratio" }] }
+        ).then((response) => {
+          console.log("Ready");
+        })
 
         // Envio con fetch los datos mediante POST
         //   fetch(_pathApp + "producto/fetchs/sugerir-cancion.php", {
