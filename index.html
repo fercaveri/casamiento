@@ -540,8 +540,8 @@ function initMap(latitud = 0, longitud = 0) {
             <div class="info-box">
               <h6>Dirección</h6>
               <p>Av. Pte. J. D. Perón 1081 - San Miguel</p>
-              <a href="https://fixdate.io/ar/modelo-invitacion/viaje#" data-evento="Ceremonia"
-                class="boton modal-como-llegar">¿Cómo llegar?</a>
+              <!-- <a href="https://fixdate.io/ar/modelo-invitacion/viaje#" data-evento="Ceremonia"
+                class="boton modal-como-llegar">¿Cómo llegar?</a> -->
             </div>
 
           </div>
@@ -586,8 +586,8 @@ function initMap(latitud = 0, longitud = 0) {
             <div class="info-box">
               <h6>Dirección</h6>
               <p>Quirno 2700 - Bella Vista</p>
-              <a href="https://fixdate.io/ar/modelo-invitacion/viaje#" data-evento="Fiesta"
-                class="boton modal-como-llegar">¿Cómo llegar?</a>
+              <a href="https://www.google.com.ar/maps/place/La+Quinta+de+Bella+Vista/@-34.5695816,-58.7043147,17z/data=!3m1!4b1!4m5!3m4!1s0x95bcbdc81abb6829:0x9f371e865b1648e!8m2!3d-34.5696075!4d-58.7021506" data-evento="Fiesta"
+                class="boton" target="_blank">¿Cómo llegar?</a>
             </div>
 
           </div>
@@ -2032,12 +2032,18 @@ function initMap(latitud = 0, longitud = 0) {
       // Obtengo los datos del formulario
       var datos = new FormData(formulario);
 
+      var comentariosValue = document.getElementById("comentariosAsistente").value;
+
       invitadosFiltrados.forEach((pers, idx) => {
         let checkbox = document.getElementById("persona-" + (idx + 1));
 
         var body = {
           confirma: checkbox.checked ? "SI" : "NO"
         };
+
+        if (idx == 0) {
+          body.comentarios = comentariosValue;
+        }
 
         axios.patch(`https://sheetdb.io/api/v1/v7gtkfpag23yf/index/${pers.index}`,
           body
